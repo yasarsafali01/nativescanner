@@ -1,0 +1,194 @@
+import { useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as ImageManipulator from "expo-image-manipulator";
+
+import CornerEditor from "../scanner/CornerEditor";
+import ProgressBar from "../scanner/ProgressBar";
+import { defaultCorners } from "../scanner/cornerUtils";
+import { processImage } from "../processing/processImage";
+import { buildPdfFromJpegs } from "../processing/pdf";
+import { saveScan } from "../storage/history";
+import { useI18n } from "../i18n/I18nContext";
+import { useAppTheme } from "../theme/ThemeContext";
+
+const DISPLAY_WIDTH = Dimensions.get("window").width - 32;
+
+function Stepper({ label, value, onChange, styles, colors, min = -50, max = 50, step = 10 }) {
+  return (
+    <View style={styles.stepperRow}>
+      <Text style={styles.stepperLabel}>{label}</Text>
+      <View style={styles.stepperControls}>
+        <TouchableOpacity
+          style={styles.stepperBtn}
+          onPress={() => onChange(Math.max(min, value - step))}
+          disabled={value <= min}
+        >
+          <Text style={styles.stepperBtnText}>−</Text>
+        </TouchableOpacity>
+        <Text style={styles.stepperValue}>{value}</Text>
+        <TouchableOpacity
+          style={styles.stepperBtn}
+          onPress={() => onChange(Math.min(max, value + step))}
+          disabled={value >= max}
+        >
+          <Text style={styles.stepperBtnText}>+</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+export default function EditScreen({ route, navigation }) {
+  const { t } = useI18n();
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const MODES = [
+    { value: "bw", label: t("modes.bw") },
+    { value: "gray", label: t("modes.gray") },
+    { value: "color", label: t("modes.color") },
+  ];
+
+  const [asset, setAsset] = useState(route.params.asset);
+  const [corners, setCorners] = useState(() => defaultCorners(asset.width, asset.height));
+  const [mode, setMode] = useState("bw");
+  const [ocr, setOcr] = useState(false);
+  const [rotating, setRotating] = useState(false);
+  const [brightness, setBrightness] = useState(0);
+  const [contrast, setContrast] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+
+  async function rotateBy(degrees) {
+    if (rotating) return;
+    setRotating(true);
+    try {
+      const result = await ImageManipulator.manipulateAsync(asset.uri, [{ rotate: degrees }], {
+        compress: 1,
+        format: ImageManipulator.SaveFormat.JPEG,
+      });
+      setAsset({ ...asset, uri: result.uri, width: result.width, height: result.height });
+      setCorners(defaultCorners(result.width, result.height));
+    } catch {
+      Alert.alert(t("common.error"), t("edit.rotateFailed"));
+    } finally {
+      setRotating(false);
+    }
+  }
+  function rotateLeft() {
+    rotateBy(-90);
+  }
+  function rotateRight() {
+    rotateBy(90);
+  }
+
+  async function handleScan() {
+    setLoading(true);
+
+    try {
+      const { bytes, width, height } = await processImage({
+        uri: asset.uri,
+        corners,
+        mode,
+        brightness,
+        contrast,
+      });
+      const pdfBytes = await buildPdfFromJpegs([{ bytes, width, height }]);
+      const entry = await saveScan({ images: [bytes], pdf: pdfBytes, text: null, mode });
+      navigation.replace("Result", { entry });
+    } catch (err) {
+      Alert.alert(t("edit.scanFailedTitle"), err.message || t("edit.unexpectedError"));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <ScrollView contentContainerStyle={styles.page} scrollEnabled={scrollEnabled}>
+      <CornerEditor
+        uri={asset.uri}
+        naturalWidth={asset.width}
+        naturalHeight={asset.height}
+        displayWidth={DISPLAY_WIDTH}
+        corners={corners}
+        onChange={setCorners}
+        onDragActive={(active) => setScrollEnabled(!active)}
+      />
+      <Text style={styles.hint}>{t("edit.dragCorners")}</Text>
+
+      <View style={styles.rotateRow}>
+        <TouchableOpacity style={styles.rotateBtn} onPress={rotateLeft} disabled={rotating}>
+          <Text style={styles.rotateBtnText}>{t("edit.rotateLeft")}</Text>
+        </TouchableOpacity>
+        {rotating && <ActivityIndicator size="small" color={colors.accentDark} style={styles.rotateSpinner} />}
+        <TouchableOpacity style={styles.rotateBtn} onPress={rotateRight} disabled={rotating}>
+          <Text style={styles.rotateBtnText}>{t("edit.rotateRight")}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.adjustBox}>
+        <Stepper label={t("edit.brightness")} value={brightness} onChange={setBrightness} styles={styles} colors={colors} />
+        <Stepper label={t("edit.contrast")} value={contrast} onChange={setContrast} styles={styles} colors={colors} />
+      </View>
+
+      <View style={styles.modes}>
+        {MODES.map((m) => (
+          <TouchableOpacity
+            key={m.value}
+            style={[styles.mode, mode === m.value && styles.modeActive]}
+            onPress={() => setMode(m.value)}
+          >
+            <Text style={mode === m.value ? styles.modeTextActive : styles.modeText}>{m.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* OCR henüz bu on-device sürümde uygulanmadı (bkz. SCANNERAPP_NATIVE_MOBILE_SPEC.md §6) */}
+      <View style={styles.ocrRow}>
+        <Text style={styles.ocrLabel}>{t("edit.ocrComingSoon")}</Text>
+        <Switch value={ocr} onValueChange={setOcr} disabled />
+      </View>
+
+      <TouchableOpacity style={styles.scanBtn} onPress={handleScan} disabled={loading}>
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.scanBtnText}>{t("edit.scanButton")}</Text>}
+      </TouchableOpacity>
+      {loading && <ProgressBar progress={1} indeterminate estimateSeconds={4} label={t("edit.processing")} />}
+    </ScrollView>
+  );
+}
+
+function createStyles(colors) {
+  return StyleSheet.create({
+    page: { padding: 16, paddingBottom: 60, backgroundColor: colors.background },
+    hint: { color: colors.textMuted, marginTop: 8, marginBottom: 12, fontSize: 13 },
+    rotateRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+    rotateBtn: { flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.borderStrong, borderRadius: 8, padding: 10, alignItems: "center" },
+    rotateBtnText: { color: colors.accentDark, fontWeight: "600", fontSize: 13 },
+    rotateSpinner: { width: 44 },
+    adjustBox: { backgroundColor: colors.card, borderRadius: 10, borderWidth: 1, borderColor: colors.border, padding: 12, marginTop: 14 },
+    stepperRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 6 },
+    stepperLabel: { color: colors.text, fontWeight: "600", fontSize: 13 },
+    stepperControls: { flexDirection: "row", alignItems: "center", gap: 10 },
+    stepperBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: colors.accentSoft, alignItems: "center", justifyContent: "center" },
+    stepperBtnText: { color: colors.accentDark, fontSize: 18, fontWeight: "700", lineHeight: 20 },
+    stepperValue: { width: 36, textAlign: "center", fontWeight: "600", color: colors.text },
+    modes: { flexDirection: "row", gap: 8, marginTop: 14 },
+    mode: { flex: 1, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: colors.borderStrong, alignItems: "center" },
+    modeActive: { backgroundColor: colors.accent, borderColor: colors.accent },
+    modeText: { color: colors.text },
+    modeTextActive: { color: "#fff" },
+    ocrRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 16 },
+    ocrLabel: { color: colors.text, flex: 1, marginRight: 8 },
+    scanBtn: { backgroundColor: colors.success, padding: 14, borderRadius: 8, alignItems: "center", marginTop: 16 },
+    scanBtnText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+  });
+}

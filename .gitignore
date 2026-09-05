@@ -1,0 +1,42 @@
+# Derleyici / build çıktıları
+dist/
+build/
+out/
+.next/
+.expo/
+*.class
+*.o
+*.a
+*.so
+
+# Bağımlılık klasörleri
+node_modules/
+vendor/
+
+# Ortam & gizli dosyalar
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# IDE & sistem dosyaları
+.idea/
+.vscode/
+*.suo
+*.user
+.DS_Store
+Thumbs.db
+
+# Expo prebuild ile otomatik üretilen native projeler (app.json'dan yeniden oluşturulur)
+android/
+ios/
+
+# Geliştirme sırasında oluşan geçici dosyalar
+.tmp/
+.tmp_emulator.log
+*.tsbuildinfo
+
+# Claude'a ait dosyalar
+.claude/
+CLAUDE.md
