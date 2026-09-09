@@ -1,22 +1,24 @@
 {
   "expo": {
-    "name": "NativeScanner",
-    "slug": "nativescanner",
+    "name": "SCANSYNC - Free Document Scanner",
+    "slug": "scansync",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eysinteractivetech.scanner",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#058090",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.anonymous.nativescanner",
+      "package": "com.eysinteractivetech.scanner",
       "versionCode": 1
     },
     "plugins": [
@@ -28,7 +30,25 @@
           "savePhotosPermission": "Taranan sayfaları galerinize kaydetmek için izin gerekli.",
           "isAccessMediaLocationEnabled": false
         }
-      ]
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 280,
+          "resizeMode": "contain",
+          "backgroundColor": "#058090"
+        }
+      ],
+      "expo-font",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-9814184784546758~4147482736",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+        }
+      ],
+      "./plugins/withKotlinVersion.js"
     ]
   }
 }

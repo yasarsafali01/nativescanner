@@ -24,6 +24,7 @@ import { buildPdfFromJpegs } from "../processing/pdf";
 import { saveScan } from "../storage/history";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
+import { useInterstitialAd } from "../ads/useInterstitialAd";
 
 const DISPLAY_WIDTH = Dimensions.get("window").width - 32;
 const MAX_PAGES = 60;
@@ -50,6 +51,7 @@ export default function MultiScanScreen({ navigation, route }) {
   const [ocr, setOcr] = useState(false);
   const [loading, setLoading] = useState(false);
   const initialAssets = route?.params?.initialAssets;
+  const showInterstitialAd = useInterstitialAd();
 
   function beginEditing(asset) {
     setCurrent(asset);
@@ -178,6 +180,7 @@ export default function MultiScanScreen({ navigation, route }) {
         mode,
         pageCount: processed.length,
       });
+      showInterstitialAd();
       navigation.replace("Result", { entry });
     } catch (err) {
       Alert.alert(t("edit.scanFailedTitle"), err.message || t("edit.unexpectedError"));

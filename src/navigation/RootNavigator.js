@@ -1,7 +1,7 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text } from "react-native";
+import { Image, Text } from "react-native";
 
 import HomeScreen from "../screens/HomeScreen";
 import EditScreen from "../screens/EditScreen";
@@ -11,16 +11,32 @@ import HistoryScreen from "../screens/HistoryScreen";
 import HeaderControls from "../components/HeaderControls";
 import { useAppTheme } from "../theme/ThemeContext";
 import { useI18n } from "../i18n/I18nContext";
+import { FONTS } from "../theme/fonts";
 
 const Tab = createBottomTabNavigator();
 const ScanStack = createNativeStackNavigator();
 const HistoryStack = createNativeStackNavigator();
 
+function HomeHeaderLogo() {
+  return (
+    <Image
+      source={require("../../assets/icon.png")}
+      style={{ width: 34, height: 34, borderRadius: 9 }}
+      resizeMode="cover"
+    />
+  );
+}
+
 function ScanStackScreen() {
   const { t } = useI18n();
   return (
-    <ScanStack.Navigator screenOptions={{ headerRight: () => <HeaderControls /> }}>
-      <ScanStack.Screen name="ScanHome" component={HomeScreen} options={{ title: t("titles.home") }} />
+    <ScanStack.Navigator
+      screenOptions={{
+        headerRight: () => <HeaderControls />,
+        headerTitleStyle: { fontFamily: FONTS.bold, fontSize: 18 },
+      }}
+    >
+      <ScanStack.Screen name="ScanHome" component={HomeScreen} options={{ headerTitle: () => <HomeHeaderLogo /> }} />
       <ScanStack.Screen name="Edit" component={EditScreen} options={{ title: t("titles.edit") }} />
       <ScanStack.Screen name="MultiScan" component={MultiScanScreen} options={{ title: t("titles.multiscan") }} />
       <ScanStack.Screen name="Result" component={ResultScreen} options={{ title: t("titles.result") }} />
@@ -31,7 +47,12 @@ function ScanStackScreen() {
 function HistoryStackScreen() {
   const { t } = useI18n();
   return (
-    <HistoryStack.Navigator screenOptions={{ headerRight: () => <HeaderControls /> }}>
+    <HistoryStack.Navigator
+      screenOptions={{
+        headerRight: () => <HeaderControls />,
+        headerTitleStyle: { fontFamily: FONTS.bold, fontSize: 18 },
+      }}
+    >
       <HistoryStack.Screen name="HistoryHome" component={HistoryScreen} options={{ title: t("titles.history") }} />
       <HistoryStack.Screen name="Result" component={ResultScreen} options={{ title: t("titles.result") }} />
     </HistoryStack.Navigator>
@@ -66,6 +87,7 @@ export default function RootNavigator() {
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.textFaint,
           tabBarStyle: { backgroundColor: colors.headerBg, borderTopColor: colors.border },
+          tabBarLabelStyle: { fontFamily: FONTS.semiBold, fontSize: 12 },
         }}
       >
         <Tab.Screen

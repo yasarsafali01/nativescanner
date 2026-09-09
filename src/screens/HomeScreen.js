@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { getHistory } from "../storage/history";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
+import AppBanner from "../ads/AppBanner";
 
 export default function HomeScreen({ navigation }) {
   const { t } = useI18n();
@@ -55,7 +56,8 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.page}>
+    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.page}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{t("home.greeting")}</Text>
         <Text style={styles.headerSubtitle}>
@@ -114,13 +116,16 @@ export default function HomeScreen({ navigation }) {
           />
         </View>
       )}
+    </ScrollView>
+    <AppBanner />
     </View>
   );
 }
 
 function createStyles(colors) {
   return StyleSheet.create({
-    page: { flex: 1, backgroundColor: colors.background, padding: 16 },
+    container: { flex: 1, backgroundColor: colors.background },
+    page: { padding: 16 },
     header: { marginTop: 4, marginBottom: 4 },
     headerTitle: { fontSize: 22, fontWeight: "800", color: colors.text },
     headerSubtitle: { fontSize: 13, color: colors.textMuted, marginTop: 4 },

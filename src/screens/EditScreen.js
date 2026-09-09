@@ -20,6 +20,7 @@ import { buildPdfFromJpegs } from "../processing/pdf";
 import { saveScan } from "../storage/history";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
+import { useInterstitialAd } from "../ads/useInterstitialAd";
 
 const DISPLAY_WIDTH = Dimensions.get("window").width - 32;
 
@@ -67,6 +68,7 @@ export default function EditScreen({ route, navigation }) {
   const [contrast, setContrast] = useState(0);
   const [loading, setLoading] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
+  const showInterstitialAd = useInterstitialAd();
 
   async function rotateBy(degrees) {
     if (rotating) return;
@@ -104,6 +106,7 @@ export default function EditScreen({ route, navigation }) {
       });
       const pdfBytes = await buildPdfFromJpegs([{ bytes, width, height }]);
       const entry = await saveScan({ images: [bytes], pdf: pdfBytes, text: null, mode });
+      showInterstitialAd();
       navigation.replace("Result", { entry });
     } catch (err) {
       Alert.alert(t("edit.scanFailedTitle"), err.message || t("edit.unexpectedError"));

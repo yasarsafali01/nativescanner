@@ -2,16 +2,17 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from "react
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
 
-export default function LanguageModal({ visible, onClose }) {
+export default function LanguageModal({ visible, onClose, data }) {
   const { lang, setLang, languages } = useI18n();
   const { colors } = useAppTheme();
+  const items = data || languages;
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose}>
         <View style={[styles.card, { backgroundColor: colors.card }]} onStartShouldSetResponder={() => true}>
           <FlatList
-            data={languages}
+            data={items}
             keyExtractor={(item) => item.code}
             renderItem={({ item }) => (
               <TouchableOpacity

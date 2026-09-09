@@ -5,20 +5,41 @@ import { useAppTheme } from "../theme/ThemeContext";
 import LanguageModal from "./LanguageModal";
 
 export default function HeaderControls() {
-  const { lang, languages, t } = useI18n();
+  const { lang, languages, setLang, t } = useI18n();
   const { isDark, toggleTheme, colors } = useAppTheme();
   const [langModalVisible, setLangModalVisible] = useState(false);
 
-  const current = languages.find((l) => l.code === lang);
+  const turkish = languages.find((l) => l.code === "tr");
+  const otherLanguages = languages.filter((l) => l.code !== "tr");
+  const isTurkish = lang === "tr";
+  const currentOther = otherLanguages.find((l) => l.code === lang);
+  const otherPillLanguage = currentOther || otherLanguages[0];
 
   return (
     <View style={styles.row}>
       <TouchableOpacity
-        style={[styles.pill, { backgroundColor: colors.accentSoft }]}
+        style={[
+          styles.pill,
+          { backgroundColor: colors.accentSoft },
+          isTurkish && { backgroundColor: colors.accent },
+        ]}
+        onPress={() => setLang("tr")}
+      >
+        <Text style={styles.flagText}>{turkish?.flag}</Text>
+        <Text style={[styles.pillText, { color: isTurkish ? "#ffffff" : colors.accentDark }]}>TR</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.pill,
+          { backgroundColor: colors.accentSoft },
+          !isTurkish && { backgroundColor: colors.accent },
+        ]}
         onPress={() => setLangModalVisible(true)}
       >
-        <Text style={styles.flagText}>{current?.flag || "🏳️"}</Text>
-        <Text style={[styles.pillText, { color: colors.accentDark }]}>{(current?.code || "tr").toUpperCase()}</Text>
+        <Text style={styles.flagText}>{otherPillLanguage?.flag}</Text>
+        <Text style={[styles.pillText, { color: !isTurkish ? "#ffffff" : colors.accentDark }]}>
+          {otherPillLanguage?.code.toUpperCase()}
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.pill, { backgroundColor: colors.accentSoft }]} onPress={toggleTheme}>
         <Text style={styles.iconText}>{isDark ? "🌙" : "☀️"}</Text>
@@ -26,7 +47,7 @@ export default function HeaderControls() {
           {isDark ? t("theme.dark") : t("theme.light")}
         </Text>
       </TouchableOpacity>
-      <LanguageModal visible={langModalVisible} onClose={() => setLangModalVisible(false)} />
+      <LanguageModal visible={langModalVisible} onClose={() => setLangModalVisible(false)} data={otherLanguages} />
     </View>
   );
 }

@@ -1,10 +1,12 @@
-# NativeScanner
+# SCANSYNC - Free Document Scanner
 
-Backend'siz, tamamen cihaz üzerinde çalışan bir React Native (Expo) belge tarayıcı. Köşe düzeltme, döndürme, parlaklık/kontrast, siyah-beyaz/gri/renkli mod, çoklu sayfa PDF birleştirme ve tarama geçmişi — hepsi ağ bağlantısı olmadan, cihazda işlenir.
+Backend'siz, belge işlemeyi tamamen cihaz üzerinde yapan bir React Native (Expo) belge tarayıcı. Köşe düzeltme, döndürme, parlaklık/kontrast, siyah-beyaz/gri/renkli mod, çoklu sayfa PDF birleştirme ve tarama geçmişi — hepsi ağ bağlantısı olmadan, cihazda işlenir. Uygulama yalnızca Google AdMob reklamlarını göstermek için internete bağlanır (bkz. [PRIVACY.md](PRIVACY.md)).
+
+Geliştirici: **EYS Interactive Tech**
 
 ## Mimari
 
-Tüm işlem cihaz üzerinde yapılır, sunucuya hiçbir görüntü gönderilmez:
+Belge işleme tamamen cihaz üzerinde yapılır, sunucuya hiçbir görüntü gönderilmez:
 
 1. **Çekim / seçim** — kamera veya galeriden fotoğraf alınır.
 2. **Köşe düzeltme** — kullanıcı 4 köşeyi sürükler, `src/processing/perspectiveWarp.js` saf JS homografi matrisiyle perspektif düzeltmesi uygular.
@@ -36,6 +38,7 @@ src/
 - `pdf-lib` — PDF birleştirme
 - `react-native-reanimated` — Skia'nın native JSI kurulumu için gerekli
 - AsyncStorage — tarama geçmişi ve tema/dil tercihi kalıcılığı
+- `react-native-google-mobile-ads` — banner ve geçiş (interstitial) reklamlar (bkz. [INSTALL.md](INSTALL.md#reklamlar-admob))
 
 ## Hızlı Başlangıç
 
@@ -44,4 +47,4 @@ npm install
 npx expo run:android
 ```
 
-Kurulum detayları için [INSTALL.md](INSTALL.md) dosyasına bakın.
+Kurulum detayları için [INSTALL.md](INSTALL.md) dosyasına bakın. Mağaza yayını adımları da INSTALL.md içinde yer alır. Gizlilik politikası için [PRIVACY.md](PRIVACY.md) dosyasına bakın.

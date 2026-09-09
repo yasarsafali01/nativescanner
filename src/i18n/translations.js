@@ -17,9 +17,9 @@ export const DEFAULT_LANGUAGE = "tr";
 
 export const translations = {
   tr: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Tara", history: "Taramalarım" },
-    titles: { home: "FreeScanner", edit: "Köşeleri Ayarla", multiscan: "Çoklu Sayfa Tara", result: "Sonuç", history: "Taramalarım" },
+    titles: { home: "SCANSYNC", edit: "Köşeleri Ayarla", multiscan: "Çoklu Sayfa Tara", result: "Sonuç", history: "Taramalarım" },
     common: { cancel: "Vazgeç", save: "Kaydet", delete: "Sil", error: "Hata", ok: "Tamam", permissionRequired: "İzin gerekli" },
     theme: { light: "Açık", dark: "Koyu", label: "Tema" },
     language: { label: "Dil" },
@@ -100,9 +100,9 @@ export const translations = {
   },
 
   en: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Scan", history: "My Scans" },
-    titles: { home: "FreeScanner", edit: "Adjust Corners", multiscan: "Multi-Page Scan", result: "Result", history: "My Scans" },
+    titles: { home: "SCANSYNC", edit: "Adjust Corners", multiscan: "Multi-Page Scan", result: "Result", history: "My Scans" },
     common: { cancel: "Cancel", save: "Save", delete: "Delete", error: "Error", ok: "OK", permissionRequired: "Permission required" },
     theme: { light: "Light", dark: "Dark", label: "Theme" },
     language: { label: "Language" },
@@ -183,9 +183,9 @@ export const translations = {
   },
 
   ru: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Скан", history: "Мои сканы" },
-    titles: { home: "FreeScanner", edit: "Настройка углов", multiscan: "Скан нескольких страниц", result: "Результат", history: "Мои сканы" },
+    titles: { home: "SCANSYNC", edit: "Настройка углов", multiscan: "Скан нескольких страниц", result: "Результат", history: "Мои сканы" },
     common: { cancel: "Отмена", save: "Сохранить", delete: "Удалить", error: "Ошибка", ok: "ОК", permissionRequired: "Требуется разрешение" },
     theme: { light: "Светлая", dark: "Тёмная", label: "Тема" },
     language: { label: "Язык" },
@@ -266,9 +266,9 @@ export const translations = {
   },
 
   ar: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "مسح", history: "مسحوباتي" },
-    titles: { home: "FreeScanner", edit: "ضبط الزوايا", multiscan: "مسح متعدد الصفحات", result: "النتيجة", history: "مسحوباتي" },
+    titles: { home: "SCANSYNC", edit: "ضبط الزوايا", multiscan: "مسح متعدد الصفحات", result: "النتيجة", history: "مسحوباتي" },
     common: { cancel: "إلغاء", save: "حفظ", delete: "حذف", error: "خطأ", ok: "حسنًا", permissionRequired: "الإذن مطلوب" },
     theme: { light: "فاتح", dark: "داكن", label: "المظهر" },
     language: { label: "اللغة" },
@@ -349,9 +349,9 @@ export const translations = {
   },
 
   zh: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "扫描", history: "我的扫描" },
-    titles: { home: "FreeScanner", edit: "调整边角", multiscan: "多页扫描", result: "结果", history: "我的扫描" },
+    titles: { home: "SCANSYNC", edit: "调整边角", multiscan: "多页扫描", result: "结果", history: "我的扫描" },
     common: { cancel: "取消", save: "保存", delete: "删除", error: "错误", ok: "好", permissionRequired: "需要权限" },
     theme: { light: "浅色", dark: "深色", label: "主题" },
     language: { label: "语言" },
@@ -432,9 +432,9 @@ export const translations = {
   },
 
   de: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Scannen", history: "Meine Scans" },
-    titles: { home: "FreeScanner", edit: "Ecken anpassen", multiscan: "Mehrseitiger Scan", result: "Ergebnis", history: "Meine Scans" },
+    titles: { home: "SCANSYNC", edit: "Ecken anpassen", multiscan: "Mehrseitiger Scan", result: "Ergebnis", history: "Meine Scans" },
     common: { cancel: "Abbrechen", save: "Speichern", delete: "Löschen", error: "Fehler", ok: "OK", permissionRequired: "Berechtigung erforderlich" },
     theme: { light: "Hell", dark: "Dunkel", label: "Design" },
     language: { label: "Sprache" },
@@ -515,9 +515,9 @@ export const translations = {
   },
 
   fr: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Scanner", history: "Mes scans" },
-    titles: { home: "FreeScanner", edit: "Ajuster les coins", multiscan: "Scan multi-pages", result: "Résultat", history: "Mes scans" },
+    titles: { home: "SCANSYNC", edit: "Ajuster les coins", multiscan: "Scan multi-pages", result: "Résultat", history: "Mes scans" },
     common: { cancel: "Annuler", save: "Enregistrer", delete: "Supprimer", error: "Erreur", ok: "OK", permissionRequired: "Autorisation requise" },
     theme: { light: "Clair", dark: "Sombre", label: "Thème" },
     language: { label: "Langue" },
@@ -598,9 +598,9 @@ export const translations = {
   },
 
   it: {
-    appName: "FreeScanner",
+    appName: "SCANSYNC",
     tabs: { scan: "Scansiona", history: "Le mie scansioni" },
-    titles: { home: "FreeScanner", edit: "Regola gli angoli", multiscan: "Scansione multipagina", result: "Risultato", history: "Le mie scansioni" },
+    titles: { home: "SCANSYNC", edit: "Regola gli angoli", multiscan: "Scansione multipagina", result: "Risultato", history: "Le mie scansioni" },
     common: { cancel: "Annulla", save: "Salva", delete: "Elimina", error: "Errore", ok: "OK", permissionRequired: "Autorizzazione richiesta" },
     theme: { light: "Chiaro", dark: "Scuro", label: "Tema" },
     language: { label: "Lingua" },

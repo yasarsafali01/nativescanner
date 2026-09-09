@@ -17,6 +17,13 @@ export function I18nProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // App layout is never mirrored, regardless of translated language. An
+    // earlier build did force native RTL for Arabic; this clears any such
+    // flag left over on devices from that version.
+    if (I18nManager.isRTL) {
+      I18nManager.allowRTL(false);
+      I18nManager.forceRTL(false);
+    }
     AsyncStorage.getItem(STORAGE_KEY).then((saved) => {
       if (saved && translations[saved]) setLangState(saved);
       setReady(true);
@@ -27,14 +34,6 @@ export function I18nProvider({ children }) {
     if (!translations[code]) return;
     setLangState(code);
     AsyncStorage.setItem(STORAGE_KEY, code).catch(() => {});
-    const meta = LANGUAGES.find((l) => l.code === code);
-    const shouldBeRtl = Boolean(meta?.rtl);
-    if (I18nManager.isRTL !== shouldBeRtl) {
-      // Full RTL mirroring of native layout requires an app reload to take
-      // effect everywhere; text direction/translation still updates instantly.
-      I18nManager.allowRTL(shouldBeRtl);
-      I18nManager.forceRTL(shouldBeRtl);
-    }
   }
 
   const value = useMemo(() => {
