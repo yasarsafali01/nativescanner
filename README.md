@@ -1,4 +1,4 @@
-# SCANSYNC - Free Document Scanner
+# SCANSYNC - Free Scanner
 
 Backend'siz, belge işlemeyi tamamen cihaz üzerinde yapan bir React Native (Expo) belge tarayıcı. Köşe düzeltme, döndürme, parlaklık/kontrast, siyah-beyaz/gri/renkli mod, çoklu sayfa PDF birleştirme ve tarama geçmişi — hepsi ağ bağlantısı olmadan, cihazda işlenir. Uygulama yalnızca Google AdMob reklamlarını göstermek için internete bağlanır (bkz. [PRIVACY.md](PRIVACY.md)).
 

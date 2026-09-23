@@ -1,6 +1,6 @@
 # Gizlilik Politikası
 
-**SCANSYNC - Free Document Scanner** — EYS Interactive Tech
+**SCANSYNC - Free Scanner** — EYS Interactive Tech
 
 Son güncelleme: 2026-09-09
 

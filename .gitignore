@@ -19,6 +19,9 @@ vendor/
 .env.*.local
 *.key
 *.pem
+*.keystore
+*.jks
+keystore/
 
 # IDE & sistem dosyaları
 .idea/

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "SCANSYNC - Free Document Scanner",
+    "name": "SCANSYNC - Free Scanner",
     "slug": "scansync",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.eysinteractivetech.scanner",
-      "versionCode": 1
+      "versionCode": 3
     },
     "plugins": [
       "expo-sharing",
@@ -48,7 +48,8 @@
           "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
       ],
-      "./plugins/withKotlinVersion.js"
+      "./plugins/withKotlinVersion.js",
+      "./plugins/withReleaseSigning.js"
     ]
   }
 }

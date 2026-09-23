@@ -40,7 +40,7 @@ Backend bağımlılığı olmadığı için `.env` dosyasına ihtiyaç yoktur.
 
 ## Mağaza Yayını (Play Store / App Store)
 
-Uygulama kimliği: **SCANSYNC - Free Document Scanner** — geliştirici **EYS Interactive Tech**, paket adı `com.eysinteractivetech.scanner`.
+Uygulama kimliği: **SCANSYNC - Free Scanner** — geliştirici **EYS Interactive Tech**, paket adı `com.eysinteractivetech.scanner`.
 
 ### İkon / Splash
 
