@@ -13,7 +13,7 @@ import {
   View,
   Image,
 } from "react-native";
-import * as MediaLibrary from "expo-media-library";
+import * as MediaLibrary from "expo-media-library/legacy";
 
 import { deleteScan, renameScan } from "../storage/history";
 import { shareFile } from "../scanner/shareFile";
