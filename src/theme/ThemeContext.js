@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const STORAGE_KEY = "freescanner_theme";
@@ -44,34 +45,50 @@ const darkColors = {
 const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
-  // Default is always light regardless of the device's system theme; the user
-  // switches explicitly via the header toggle, and that choice is persisted.
-  const [isDark, setIsDark] = useState(false);
+  // themeMode is "light" | "dark" | "system". Default is "light" regardless
+  // of the device's system theme; the user switches explicitly, and that
+  // choice is persisted.
+  const [themeMode, setThemeMode] = useState("light");
   const [loadedFromStorage, setLoadedFromStorage] = useState(false);
+  const systemScheme = useColorScheme();
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY).then((saved) => {
-      if (saved === "dark") setIsDark(true);
-      else if (saved === "light") setIsDark(false);
+      if (saved === "dark" || saved === "light" || saved === "system") setThemeMode(saved);
       setLoadedFromStorage(true);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function toggleTheme() {
-    setIsDark((prev) => {
-      const next = !prev;
-      AsyncStorage.setItem(STORAGE_KEY, next ? "dark" : "light").catch(() => {});
-      return next;
-    });
+  function setMode(mode) {
+    setThemeMode(mode);
+    AsyncStorage.setItem(STORAGE_KEY, mode).catch(() => {});
   }
 
+  function toggleTheme() {
+    setMode(isDarkFor(themeMode, systemScheme) ? "light" : "dark");
+  }
+
+  const isDark = isDarkFor(themeMode, systemScheme);
+
   const value = useMemo(
-    () => ({ isDark, colors: isDark ? darkColors : lightColors, toggleTheme, loadedFromStorage }),
-    [isDark, loadedFromStorage]
+    () => ({
+      isDark,
+      themeMode,
+      setThemeMode: setMode,
+      colors: isDark ? darkColors : lightColors,
+      toggleTheme,
+      loadedFromStorage,
+    }),
+    [isDark, themeMode, loadedFromStorage]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+function isDarkFor(mode, systemScheme) {
+  if (mode === "system") return systemScheme === "dark";
+  return mode === "dark";
 }
 
 export function useAppTheme() {

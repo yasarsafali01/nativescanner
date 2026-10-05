@@ -1,53 +1,21 @@
-import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
-import LanguageModal from "./LanguageModal";
+import LanguagePills from "./LanguagePills";
 
 export default function HeaderControls() {
-  const { lang, languages, setLang, t } = useI18n();
+  const { t } = useI18n();
   const { isDark, toggleTheme, colors } = useAppTheme();
-  const [langModalVisible, setLangModalVisible] = useState(false);
-
-  const turkish = languages.find((l) => l.code === "tr");
-  const otherLanguages = languages.filter((l) => l.code !== "tr");
-  const isTurkish = lang === "tr";
-  const currentOther = otherLanguages.find((l) => l.code === lang);
-  const otherPillLanguage = currentOther || otherLanguages[0];
 
   return (
     <View style={styles.row}>
-      <TouchableOpacity
-        style={[
-          styles.pill,
-          { backgroundColor: colors.accentSoft },
-          isTurkish && { backgroundColor: colors.accent },
-        ]}
-        onPress={() => setLang("tr")}
-      >
-        <Text style={styles.flagText}>{turkish?.flag}</Text>
-        <Text style={[styles.pillText, { color: isTurkish ? "#ffffff" : colors.accentDark }]}>TR</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.pill,
-          { backgroundColor: colors.accentSoft },
-          !isTurkish && { backgroundColor: colors.accent },
-        ]}
-        onPress={() => setLangModalVisible(true)}
-      >
-        <Text style={styles.flagText}>{otherPillLanguage?.flag}</Text>
-        <Text style={[styles.pillText, { color: !isTurkish ? "#ffffff" : colors.accentDark }]}>
-          {otherPillLanguage?.code.toUpperCase()}
-        </Text>
-      </TouchableOpacity>
+      <LanguagePills />
       <TouchableOpacity style={[styles.pill, { backgroundColor: colors.accentSoft }]} onPress={toggleTheme}>
         <Text style={styles.iconText}>{isDark ? "🌙" : "☀️"}</Text>
         <Text style={[styles.pillText, { color: colors.accentDark }]}>
           {isDark ? t("theme.dark") : t("theme.light")}
         </Text>
       </TouchableOpacity>
-      <LanguageModal visible={langModalVisible} onClose={() => setLangModalVisible(false)} data={otherLanguages} />
     </View>
   );
 }
@@ -62,7 +30,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 9,
   },
-  flagText: { fontSize: 14 },
   iconText: { fontSize: 12 },
   pillText: { fontSize: 11.5, fontWeight: "700" },
 });

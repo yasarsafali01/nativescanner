@@ -20,6 +20,7 @@ import { shareFile } from "../scanner/shareFile";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
 import { useInterstitialAd } from "../ads/useInterstitialAd";
+import { useToast } from "../components/ToastContext";
 
 const DISPLAY_WIDTH = Dimensions.get("window").width - 32;
 
@@ -35,9 +36,16 @@ export default function ResultScreen({ route, navigation }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [savingAll, setSavingAll] = useState(false);
   const showInterstitialAd = useInterstitialAd();
+  const showToast = useToast();
 
   const imageUris = entry.imageUris || (entry.imageUri ? [entry.imageUri] : []);
   const activeUri = imageUris[activeIndex] || imageUris[0];
+
+  async function shareWithFeedback(uri) {
+    await shareFile(uri);
+    await showInterstitialAd();
+    showToast(t("result.shared"));
+  }
 
   async function downloadAll() {
     const perm = await MediaLibrary.requestPermissionsAsync();
@@ -45,16 +53,13 @@ export default function ResultScreen({ route, navigation }) {
       Alert.alert(t("common.permissionRequired"), t("result.galleryPermissionDenied"));
       return;
     }
-    showInterstitialAd();
     setSavingAll(true);
     try {
       for (const uri of imageUris) {
         await MediaLibrary.saveToLibraryAsync(uri);
       }
-      Alert.alert(
-        t("result.saved"),
-        imageUris.length > 1 ? t("result.savedPages", imageUris.length) : t("result.savedPhoto")
-      );
+      await showInterstitialAd();
+      showToast(imageUris.length > 1 ? t("result.savedPages", imageUris.length) : t("result.savedPhoto"));
     } catch (err) {
       Alert.alert(t("common.error"), `${t("result.saveError")}\n\n${err?.message || err}`);
     } finally {
@@ -121,24 +126,12 @@ export default function ResultScreen({ route, navigation }) {
       )}
 
       <View style={styles.downloads}>
-        <TouchableOpacity
-          style={styles.downloadBtn}
-          onPress={() => {
-            showInterstitialAd();
-            shareFile(activeUri);
-          }}
-        >
+        <TouchableOpacity style={styles.downloadBtn} onPress={() => shareWithFeedback(activeUri)}>
           <Text style={styles.downloadBtnText}>
             {imageUris.length > 1 ? t("result.shareJpegPage", activeIndex + 1) : t("result.shareJpeg")}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.downloadBtn}
-          onPress={() => {
-            showInterstitialAd();
-            shareFile(entry.pdfUri);
-          }}
-        >
+        <TouchableOpacity style={styles.downloadBtn} onPress={() => shareWithFeedback(entry.pdfUri)}>
           <Text style={styles.downloadBtnText}>{t("result.sharePdf")}</Text>
         </TouchableOpacity>
       </View>

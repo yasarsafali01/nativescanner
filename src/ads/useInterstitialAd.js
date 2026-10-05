@@ -5,6 +5,9 @@ import { INTERSTITIAL_AD_UNIT_ID } from "./ads";
 
 // Loads an interstitial in the background and exposes a show() that only
 // fires once an ad is actually ready; a new one is preloaded after each show.
+// show() resolves once the ad has actually closed (or immediately if none was
+// shown), so callers can safely display follow-up UI (e.g. a toast) only
+// once the user is back looking at the app.
 export function useInterstitialAd() {
   const adRef = useRef(null);
   const loadedRef = useRef(false);
@@ -37,12 +40,22 @@ export function useInterstitialAd() {
   useEffect(() => load(), [load]);
 
   return useCallback(() => {
-    if (adRef.current && loadedRef.current) {
-      try {
-        adRef.current.show();
-      } catch {
-        // Never let an ad failure block the action the user actually asked for.
+    return new Promise((resolve) => {
+      const ad = adRef.current;
+      if (!ad || !loadedRef.current) {
+        resolve();
+        return;
       }
-    }
+      const unsubClosed = ad.addAdEventListener(AdEventType.CLOSED, () => {
+        unsubClosed();
+        resolve();
+      });
+      try {
+        ad.show();
+      } catch {
+        unsubClosed();
+        resolve();
+      }
+    });
   }, []);
 }

@@ -5,6 +5,7 @@ import { Alert, FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, 
 import { deleteScan, getHistory } from "../storage/history";
 import { useI18n } from "../i18n/I18nContext";
 import { useAppTheme } from "../theme/ThemeContext";
+import AppBanner from "../ads/AppBanner";
 
 export default function HistoryScreen({ navigation }) {
   const { t } = useI18n();
@@ -97,6 +98,7 @@ export default function HistoryScreen({ navigation }) {
           )}
         />
       )}
+      <AppBanner />
     </View>
   );
 }

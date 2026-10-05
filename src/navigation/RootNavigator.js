@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "../screens/HomeScreen";
 import EditScreen from "../screens/EditScreen";
 import MultiScanScreen from "../screens/MultiScanScreen";
 import ResultScreen from "../screens/ResultScreen";
 import HistoryScreen from "../screens/HistoryScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import OnboardingScreen, { ONBOARDING_STORAGE_KEY } from "../screens/OnboardingScreen";
 import HeaderControls from "../components/HeaderControls";
 import { useAppTheme } from "../theme/ThemeContext";
 import { useI18n } from "../i18n/I18nContext";
@@ -16,6 +20,7 @@ import { FONTS } from "../theme/fonts";
 const Tab = createBottomTabNavigator();
 const ScanStack = createNativeStackNavigator();
 const HistoryStack = createNativeStackNavigator();
+const SettingsStack = createNativeStackNavigator();
 
 function HomeHeaderLogo() {
   return (
@@ -59,6 +64,20 @@ function HistoryStackScreen() {
   );
 }
 
+function SettingsStackScreen() {
+  const { t } = useI18n();
+  return (
+    <SettingsStack.Navigator
+      screenOptions={{
+        headerRight: () => <HeaderControls />,
+        headerTitleStyle: { fontFamily: FONTS.bold, fontSize: 18 },
+      }}
+    >
+      <SettingsStack.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t("titles.settings") }} />
+    </SettingsStack.Navigator>
+  );
+}
+
 function TabIcon({ symbol }) {
   return <Text style={{ fontSize: 20 }}>{symbol}</Text>;
 }
@@ -66,6 +85,13 @@ function TabIcon({ symbol }) {
 export default function RootNavigator() {
   const { colors, isDark } = useAppTheme();
   const { t } = useI18n();
+  const [onboardingDone, setOnboardingDone] = useState(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem(ONBOARDING_STORAGE_KEY).then((seen) => {
+      setOnboardingDone(seen === "1");
+    });
+  }, []);
 
   const navTheme = {
     ...(isDark ? DarkTheme : DefaultTheme),
@@ -78,6 +104,12 @@ export default function RootNavigator() {
       border: colors.border,
     },
   };
+
+  if (onboardingDone === null) return null;
+
+  if (!onboardingDone) {
+    return <OnboardingScreen onDone={() => setOnboardingDone(true)} />;
+  }
 
   return (
     <NavigationContainer theme={navTheme}>
@@ -99,6 +131,11 @@ export default function RootNavigator() {
           name="Taramalarım"
           component={HistoryStackScreen}
           options={{ title: t("tabs.history"), tabBarIcon: () => <TabIcon symbol="🗂️" /> }}
+        />
+        <Tab.Screen
+          name="Ayarlar"
+          component={SettingsStackScreen}
+          options={{ title: t("tabs.settings"), tabBarIcon: () => <TabIcon symbol="⚙️" /> }}
         />
       </Tab.Navigator>
     </NavigationContainer>

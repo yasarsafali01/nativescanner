@@ -8,7 +8,7 @@ export default function AppBanner() {
   const { colors } = useAppTheme();
   return (
     <View style={{ alignItems: "center", backgroundColor: colors.headerBg, paddingVertical: 4 }}>
-      <BannerAd unitId={BANNER_AD_UNIT_ID} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
+      <BannerAd unitId={BANNER_AD_UNIT_ID} size={BannerAdSize.LARGE_BANNER} />
     </View>
   );
 }

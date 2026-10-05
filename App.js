@@ -11,6 +11,7 @@ import {
 
 import { ThemeProvider, useAppTheme } from "./src/theme/ThemeContext";
 import { I18nProvider } from "./src/i18n/I18nContext";
+import { ToastProvider } from "./src/components/ToastContext";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { initAds } from "./src/ads/ads";
 
@@ -21,7 +22,9 @@ function AppShell() {
   return (
     <>
       <StatusBar style={colors.statusBarStyle === "light" ? "light" : "dark"} />
-      <RootNavigator />
+      <ToastProvider>
+        <RootNavigator />
+      </ToastProvider>
     </>
   );
 }
