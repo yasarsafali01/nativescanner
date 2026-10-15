@@ -48,7 +48,7 @@ export default function ResultScreen({ route, navigation }) {
   }
 
   async function downloadAll() {
-    const perm = await MediaLibrary.requestPermissionsAsync();
+    const perm = await MediaLibrary.requestPermissionsAsync(true); // write-only: we only save scans, never read the gallery
     if (!perm.granted) {
       Alert.alert(t("common.permissionRequired"), t("result.galleryPermissionDenied"));
       return;

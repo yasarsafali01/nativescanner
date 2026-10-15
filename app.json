@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.eysinteractivetech.scanner",
-      "versionCode": 8
+      "versionCode": 9
     },
     "plugins": [
       "expo-sharing",
@@ -28,7 +28,8 @@
         {
           "photosPermission": "Taranan sayfaları galerinize kaydetmek için izin gerekli.",
           "savePhotosPermission": "Taranan sayfaları galerinize kaydetmek için izin gerekli.",
-          "isAccessMediaLocationEnabled": false
+          "isAccessMediaLocationEnabled": false,
+          "granularPermissions": []
         }
       ],
       [
