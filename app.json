@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.eysinteractivetech.scanner",
-      "versionCode": 7
+      "versionCode": 8
     },
     "plugins": [
       "expo-sharing",
